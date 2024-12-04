@@ -104,9 +104,10 @@ export default function Mole() {
   }, [players]);
 
   return (
-    <Container maxW={"100%"}>
+    <Container placeItems={"center"} overflowX={"hidden"}>
+      <h1>Whack-a-mani</h1>
       {/* Row in horizontal */}
-      <Flex mt={"1rem"}>
+      <Flex mt={"1rem"} gap={"2rem"}>
         <MoleComponent
           moleId={1}
           position={mole.position}
@@ -117,14 +118,14 @@ export default function Mole() {
           position={mole.position}
           onClick={() => hit({ moleId: mole.playerToHitId })}
         />
-      </Flex>
-
-      <HStack mt={"1rem"}>
         <MoleComponent
           moleId={3}
           position={mole.position}
           onClick={() => hit({ moleId: mole.playerToHitId })}
         />
+      </Flex>
+
+      <HStack mt={"1rem"} gap={"2rem"}>
         <MoleComponent
           moleId={4}
           position={mole.position}
@@ -135,9 +136,6 @@ export default function Mole() {
           position={mole.position}
           onClick={() => hit({ moleId: mole.playerToHitId })}
         />
-      </HStack>
-
-      <HStack mt={"1rem"}>
         <MoleComponent
           moleId={6}
           position={mole.position}
@@ -145,6 +143,24 @@ export default function Mole() {
         />
         <MoleComponent
           moleId={7}
+          position={mole.position}
+          onClick={() => hit({ moleId: mole.playerToHitId })}
+        />
+      </HStack>
+
+      <HStack mt={"1rem"} gap={"2rem"}>
+        <MoleComponent
+          moleId={8}
+          position={mole.position}
+          onClick={() => hit({ moleId: mole.playerToHitId })}
+        />
+        <MoleComponent
+          moleId={9}
+          position={mole.position}
+          onClick={() => hit({ moleId: mole.playerToHitId })}
+        />
+        <MoleComponent
+          moleId={10}
           position={mole.position}
           onClick={() => hit({ moleId: mole.playerToHitId })}
         />
