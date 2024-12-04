@@ -1,10 +1,12 @@
 "use client";
 
-import BoomModal from "@/components/custom/boom.modal";
-import { Container, Flex, HStack } from "@chakra-ui/react";
-
 import { useEffect, useMemo, useState } from "react";
 import io from "socket.io-client";
+
+import { Container, Flex, HStack, Spacer } from "@chakra-ui/react";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+
+import BoomModal from "@/components/custom/boom.modal";
 import MoleComponent from "@/components/custom/mole.component";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL); // Conectamos al servidor de Socket.IO en el mismo dominio
@@ -19,6 +21,8 @@ export default function Mole() {
     position: number;
     playerToHitId: string;
   }>({ position: 0, playerToHitId: "" });
+
+  const handle = useFullScreenHandle();
 
   const playerName = "Mani";
 
@@ -104,69 +108,83 @@ export default function Mole() {
   }, [players]);
 
   return (
-    <Container placeItems={"center"} overflowX={"hidden"}>
-      <h1>Whack-a-mani</h1>
-      {/* Row in horizontal */}
-      <Flex mt={"1rem"} gap={"2rem"}>
-        <MoleComponent
-          moleId={1}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={2}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={3}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-      </Flex>
+    <>
+      <FullScreen handle={handle}>
+        <Container placeItems={"center"} overflowX={"hidden"}>
+          <h1>Whack-a-mani</h1>
+          {/* Row in horizontal */}
+          <Flex mt={"1rem"} gap={"2rem"}>
+            <MoleComponent
+              moleId={1}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={2}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={3}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+          </Flex>
 
-      <HStack mt={"1rem"} gap={"2rem"}>
-        <MoleComponent
-          moleId={4}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={5}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={6}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={7}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-      </HStack>
+          <HStack mt={"1rem"} gap={"2rem"}>
+            <MoleComponent
+              moleId={4}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={5}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={6}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={7}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+          </HStack>
 
-      <HStack mt={"1rem"} gap={"2rem"}>
-        <MoleComponent
-          moleId={8}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={9}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-        <MoleComponent
-          moleId={10}
-          position={mole.position}
-          onClick={() => hit({ moleId: mole.playerToHitId })}
-        />
-      </HStack>
+          <HStack mt={"1rem"} gap={"2rem"}>
+            <MoleComponent
+              moleId={8}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={9}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+            <MoleComponent
+              moleId={10}
+              position={mole.position}
+              onClick={() => hit({ moleId: mole.playerToHitId })}
+            />
+          </HStack>
+          <Spacer height={"10px"} />
+          <button
+            onClick={() => {
+              if (!handle.active) handle.enter();
+              else handle.exit();
+            }}
+          >
+            Enter fullscreen
+          </button>
+          <Spacer height={"10px"} />
+        </Container>
+      </FullScreen>
 
       <BoomModal opened={showBlow.opened} hittedBy={showBlow.hittedBy} />
-    </Container>
+    </>
   );
 }
