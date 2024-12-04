@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import io from "socket.io-client";
 
-import { Container, Flex, HStack, Spacer } from "@chakra-ui/react";
+import { Button, Container, Flex, HStack } from "@chakra-ui/react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import BoomModal from "@/components/custom/boom.modal";
@@ -109,9 +109,24 @@ export default function Mole() {
 
   return (
     <>
-      <FullScreen handle={handle}>
-        <Container placeItems={"center"} overflowX={"hidden"}>
-          <h1>Whack-a-mani</h1>
+      <FullScreen handle={handle} >
+        <Container placeItems={"center"} overflowX={"hidden"} maxHeight={"100vh"}>
+          <HStack w={"100%"}>
+            <h1>Whack-a-mani</h1>
+
+            <Button
+              position={"absolute"}
+              top={"1rem"}
+              right={"1rem"}
+              ml={"auto"}
+              onClick={() => {
+                if (!handle.active) handle.enter();
+                else handle.exit();
+              }}
+            >
+              {handle.active ? "Exit Fullscreen" : "Enter Fullscreen"}
+            </Button>
+          </HStack>
           {/* Row in horizontal */}
           <Flex mt={"1rem"} gap={"2rem"}>
             <MoleComponent
@@ -171,16 +186,6 @@ export default function Mole() {
               onClick={() => hit({ moleId: mole.playerToHitId })}
             />
           </HStack>
-          <Spacer height={"10px"} />
-          <button
-            onClick={() => {
-              if (!handle.active) handle.enter();
-              else handle.exit();
-            }}
-          >
-            Enter fullscreen
-          </button>
-          <Spacer height={"10px"} />
         </Container>
       </FullScreen>
 

@@ -25,13 +25,9 @@ const MoleComponent = ({
       borderRadius="md"
       boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
       transform="translateY(0)"
-      transition="transform 0.5s, box-shadow 0.2s"
-      _hover={{
-        transform: "translateY(-2px)",
-        boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.3)",
-      }}
+      transition={"transform 0.5s, box-shadow 0.2s"}
       _active={{
-        transform: "translateY(20px)",
+        transform: moleId == position ? "translateY(20px)" : "translateY(0)",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       }}
       bgColor={moleId == position ? "red" : "gray"}
