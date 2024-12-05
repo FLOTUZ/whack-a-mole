@@ -1,202 +1,59 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import io from "socket.io-client";
+import { Field } from "@/components/ui/field";
+import { Box, Button, Center, Heading, Input, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
-import { Button, Container, Flex, HStack } from "@chakra-ui/react";
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
+function Home() {
+  const router = useRouter();
 
-import MoleComponent from "@/components/custom/mole.component";
-import IWasHittedComponent from "@/components/custom/i-was-hitted.component";
-
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL); // Conectamos al servidor de Socket.IO en el mismo dominio
-
-export default function Mole() {
-  const [showBlow, setShowBlow] = useState<{
-    opened: boolean;
-    hittedBy: string | null;
-  }>({ opened: false, hittedBy: null });
-
-  const [mole, setMole] = useState<{
-    position: number;
-    playerToHitId: string;
-  }>({ position: 0, playerToHitId: "" });
-
-  const handle = useFullScreenHandle();
-
-  const playerName = "Mani";
-
-  const players = useMemo(() => {
-    return [
-      {
-        id: "1",
-        name: "Kinn",
-        img_url: "",
-      },
-      {
-        id: "2",
-        name: "Leo",
-        img_url: "",
-      },
-      {
-        id: "3",
-        name: "Tere",
-        image_url: "",
-      },
-      {
-        id: "4",
-        name: "Juanca",
-        image_url: "",
-      },
-      {
-        id: "5",
-        name: "Leo",
-        image_url: "",
-      },
-      {
-        id: "6",
-        name: "Erazo",
-        image_url: "",
-      },
-      {
-        id: "7",
-        name: "Erazo",
-        image_url: "",
-      },
-      {
-        id: "8",
-        name: "Erazo",
-        image_url: "",
-      },
-    ];
-  }, []);
-
-  function hit({ moleId }: { moleId: string }) {
-    socket.emit("hit", playerName, moleId);
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const lobbyId = formData.get("lobbyId") as string;
+    router.push(`/game?name=${name}&lobbyId=${lobbyId}`);
   }
-
-  function recievedBlow(hittedBy: string) {
-    console.log("recived_blow");
-    setShowBlow({ opened: true, hittedBy: hittedBy });
-
-    setTimeout(() => {
-      setShowBlow({ opened: false, hittedBy: null });
-    }, 1000);
-  }
-
-  useEffect(() => {
-    socket.on("recived_blow", recievedBlow);
-
-    return () => {
-      socket.off("recived_blow", recievedBlow);
-    };
-  }, [showBlow]);
-
-  // each ranom seconds between 500ms and 1 put a player on a mole
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomPlayer = players[Math.floor(Math.random() * players.length)];
-
-      setMole({
-        position: Math.floor(Math.random() * 30),
-        playerToHitId: randomPlayer.id,
-      });
-    }, Math.floor(Math.random() * 1000) + 500);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [players]);
 
   return (
-    <>
-      <FullScreen handle={handle}>
-        <IWasHittedComponent
-          iWasHitted={showBlow.opened}
-          hittedBy={showBlow.hittedBy}
+    <Box height={"100vh"}>
+      <Heading m={4}>Whack-a-mani</Heading>
+      <Center>
+        <Box
+          m={10}
+          p={8}
+          rounded={"md"}
+          h={"50%"}
+          w={"50%"}
+          _light={{ shadow: "lg" }}
+          _dark={{ bgColor: "gray.800" }}
         >
-          <Container
-            placeItems={"center"}
-            overflowX={"hidden"}
-            maxHeight={"100vh"}
-          >
-            <HStack w={"100%"}>
-              <h1>Whack-a-mani</h1>
-
-              <Button
-                position={"absolute"}
-                top={"1rem"}
-                right={"1rem"}
-                ml={"auto"}
-                onClick={() => {
-                  if (!handle.active) handle.enter();
-                  else handle.exit();
-                }}
+          <form onSubmit={onSubmit}>
+            <VStack>
+              <Field
+                label="Lobby identifier"
+                required
+                helperText="Name of the lobby"
               >
-                {handle.active ? "Exit Fullscreen" : "Enter Fullscreen"}
+                <Input name="lobbyId" placeholder="Example: Hugs not bullets" variant="subtle" autoComplete="off" />
+              </Field>
+              <Field
+                label="Player Name"
+                required
+                helperText=" Enter your name or nickname"
+              >
+                <Input name="name" placeholder="Example: Mani Codes" variant="subtle" autoComplete="off" />
+              </Field>
+
+              <Button mt={4} w={"100%"} type="submit">
+                Play!
               </Button>
-            </HStack>
-            {/* Row in horizontal */}
-            <Flex mt={"1rem"} gap={"2rem"}>
-              <MoleComponent
-                moleId={1}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={2}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={3}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-            </Flex>
-
-            <HStack mt={"1rem"} gap={"2rem"}>
-              <MoleComponent
-                moleId={4}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={5}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={6}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={7}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-            </HStack>
-
-            <HStack mt={"1rem"} gap={"2rem"}>
-              <MoleComponent
-                moleId={8}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={9}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-              <MoleComponent
-                moleId={10}
-                position={mole.position}
-                onClick={() => hit({ moleId: mole.playerToHitId })}
-              />
-            </HStack>
-          </Container>
-        </IWasHittedComponent>
-      </FullScreen>
-    </>
+            </VStack>
+          </form>
+        </Box>
+      </Center>
+    </Box>
   );
 }
+
+export default Home;
