@@ -22,7 +22,7 @@ function Lobby() {
 `;
 
   const onStartGame = useCallback(() => {
-    router.push(`/game/play?name=${params.get("name")}}`);
+    router.push(`/game/play?name=${params.get("name")}`);
   }, [params, router]);
 
   useEffect(() => {

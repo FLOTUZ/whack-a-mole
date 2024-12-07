@@ -57,7 +57,7 @@ export default function Mole() {
       const randomPlayer = players[Math.floor(Math.random() * players.length)];
 
       setMole({
-        position: Math.floor(Math.random() * 30),
+        position: 1,
         playerToHitId: randomPlayer.id,
       });
       console.log("random player", randomPlayer);
@@ -73,8 +73,10 @@ export default function Mole() {
     let playersSaved = JSON.parse(localStorage.getItem("players") || "[]");
 
     // remove the current player from the list
-    playersSaved = playersSaved.filter((player: Player) => player.name !== params.get("name"));
-    
+    playersSaved = playersSaved.filter(
+      (player: Player) => player.name !== params.get("name")
+    );
+
     setPlayers(playersSaved);
   }, [params]);
 
