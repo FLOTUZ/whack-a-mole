@@ -1,15 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import io from "socket.io-client";
 
 import { Button, Container, Flex, HStack } from "@chakra-ui/react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import MoleComponent from "@/components/custom/mole.component";
 import IWasHittedComponent from "@/components/custom/i-was-hitted.component";
-
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL); // Conectamos al servidor de Socket.IO en el mismo dominio
+import socket from "@/utils/socket";
 
 export default function Mole() {
   const [showBlow, setShowBlow] = useState<{

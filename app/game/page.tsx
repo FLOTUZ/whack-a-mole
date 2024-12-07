@@ -1,12 +1,18 @@
 "use client";
 import ContainerRandomColorComponent from "@/components/custom/container-random-color.component";
 
-import { Center, Flex, Grid, Heading, Text } from "@chakra-ui/react";
+import { Button, Center, Flex, Grid, Heading, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+
+import { socket } from "@/utils";
+import { Player } from "@/interfaces";
 
 function Lobby() {
+  const router = useRouter();
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [roomName, setRoomName] = useState<string | null>(null);
   const params = useSearchParams();
 
   const breatheAnimation = keyframes`
@@ -15,14 +21,35 @@ function Lobby() {
   100% { opacity: 1; transform: scale(1); }
 `;
 
-  const getParams = useCallback(() => {
-    params.get("name");
-    params.get("lobbyId");
-  }, [params]);
+  const onStartGame = useCallback(() => {
+    router.push(`/game/play`);
+  }, [router]);
 
   useEffect(() => {
-    getParams();
-  }, [getParams]);
+    socket.emit("playerJoined", params.get("name"), params.get("lobbyId"));
+
+    socket.on("startGame", onStartGame);
+
+    return () => {
+      socket.off("startGame", onStartGame);
+    };
+  }, [onStartGame, params]);
+
+  // Update the players list when the "playersList" event is received from the server
+  useEffect(() => {
+    socket.on("playersList", ({ playersList }: { playersList: Player[] }) => {
+      setPlayers(playersList);
+    });
+
+    socket.on("roomName", ({ roomName }: { roomName: string }) => {
+      setRoomName(roomName);
+    });
+
+    return () => {
+      socket.off("playersList");
+      socket.off("roomName");
+    };
+  }, []);
 
   return (
     <>
@@ -32,7 +59,7 @@ function Lobby() {
             Lobby name:
           </Text>
           <Text ml={1} fontWeight={"bold"}>
-            {params.get("lobbyId")}
+            {roomName}
           </Text>
         </Flex>
         {/* animation of brathing */}
@@ -47,14 +74,28 @@ function Lobby() {
 
         <Grid templateColumns="repeat(3, 1fr)" gap={6} m={4}>
           {/* container with random color */}
-          <ContainerRandomColorComponent>
-            <Center>
-              <Text height={"100%"} color={"white"} fontWeight={"bold"}>
-                Player 1
-              </Text>
-            </Center>
-          </ContainerRandomColorComponent>
+          {players.map((player, index) => (
+            <ContainerRandomColorComponent key={index}>
+              <Center>
+                <Text height={"100%"} color={"white"} fontWeight={"bold"}>
+                  {player.name}
+                </Text>
+              </Center>
+            </ContainerRandomColorComponent>
+          ))}
         </Grid>
+        {/* for the first user in array the button will appear for start the game */}
+        {players.length > 0 && players[0].name === params.get("name") && (
+          <Button
+            m={4}
+            colorScheme="green"
+            onClick={() => {
+              socket.emit("startGame");
+            }}
+          >
+            Start game
+          </Button>
+        )}
       </Center>
     </>
   );

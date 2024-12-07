@@ -32,7 +32,6 @@ function Home() {
             <VStack>
               <Field
                 label="Lobby identifier"
-                required
                 helperText="Name of the lobby"
               >
                 <Input name="lobbyId" placeholder="Example: Hugs not bullets" variant="subtle" autoComplete="off" />
