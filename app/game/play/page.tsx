@@ -24,7 +24,8 @@ export default function Mole() {
   const [mole, setMole] = useState<{
     position: number;
     playerToHitId: string;
-  }>({ position: 0, playerToHitId: "" });
+    hittedName: string;
+  }>({ position: 0, playerToHitId: "", hittedName: "" });
 
   const handle = useFullScreenHandle();
 
@@ -59,6 +60,7 @@ export default function Mole() {
       setMole({
         position: Math.floor(Math.random() * 20),
         playerToHitId: randomPlayer.id,
+        hittedName: randomPlayer.name,
       });
       console.log("random player", randomPlayer);
     }, Math.floor(Math.random() * 1000) + 500);
@@ -113,16 +115,19 @@ export default function Mole() {
               <MoleComponent
                 moleId={1}
                 position={mole.position}
+                hittedName={mole.hittedName }
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={2}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={3}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
             </Flex>
@@ -131,21 +136,25 @@ export default function Mole() {
               <MoleComponent
                 moleId={4}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={5}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={6}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={7}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
             </HStack>
@@ -154,16 +163,19 @@ export default function Mole() {
               <MoleComponent
                 moleId={8}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={9}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
               <MoleComponent
                 moleId={10}
                 position={mole.position}
+                hittedName={mole.hittedName}
                 onClick={() => hit({ moleId: mole.playerToHitId })}
               />
             </HStack>

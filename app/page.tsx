@@ -41,7 +41,7 @@ function Home() {
                 required
                 helperText=" Enter your name or nickname"
               >
-                <Input name="name" placeholder="Example: Mani Codes" variant="subtle" autoComplete="off" />
+                <Input maxLength={10} name="name" placeholder="Example: Mani Codes" variant="subtle" autoComplete="off" />
               </Field>
 
               <Button mt={4} w={"100%"} type="submit">

@@ -1,15 +1,15 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 const MoleComponent = ({
   moleId,
   position,
   onClick,
-  child,
+  hittedName,
 }: {
   moleId: number;
   position: number;
+  hittedName: string;
   onClick: () => void;
-  child?: React.ReactNode | React.ReactNode[];
 }) => {
   return (
     <Box
@@ -33,7 +33,9 @@ const MoleComponent = ({
       bgColor={moleId == position ? "red" : "gray"}
       onClick={() => moleId == position && onClick()}
     >
-      {child}
+     {
+      moleId == position && <Text>{hittedName}</Text>
+     }
     </Box>
   );
 };
