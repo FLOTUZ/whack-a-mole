@@ -35,6 +35,18 @@ a {
   text-decoration: none;
 }
 
+html {
+  user-select: none; /* Desactiva la selección de texto */
+}
+
+/* Para compatibilidad con navegadores antiguos */
+html {
+  -webkit-user-select: none; /* Chrome, Safari, Opera */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+}
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
