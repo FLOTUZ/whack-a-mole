@@ -17,7 +17,7 @@ export default function Mole() {
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [showImage, setShowImage] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(90); // 90 seconds
+  const [timer, setTimer] = useState<number>(60); // in seconds
 
   const [showBlow, setShowBlow] = useState<{
     opened: boolean;
@@ -89,7 +89,8 @@ export default function Mole() {
   useEffect(() => {
     const delay = setTimeout(() => {
       setShowImage(true);
-    }, 90000);
+      localStorage.removeItem("players");
+    }, 60000);
 
     return () => {
       clearTimeout(delay);
