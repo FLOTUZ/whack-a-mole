@@ -85,7 +85,7 @@ export default function Mole() {
     setPlayers(playersSaved);
   }, [params]);
 
-  // time out to show the image after 5 seconds
+  // time out to show the image after 60 seconds
   useEffect(() => {
     const delay = setTimeout(() => {
       setShowImage(true);
