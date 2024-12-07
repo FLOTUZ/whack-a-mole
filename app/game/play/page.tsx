@@ -57,7 +57,7 @@ export default function Mole() {
       const randomPlayer = players[Math.floor(Math.random() * players.length)];
 
       setMole({
-        position: 1,
+        position: Math.floor(Math.random() * 20),
         playerToHitId: randomPlayer.id,
       });
       console.log("random player", randomPlayer);
