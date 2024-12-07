@@ -22,8 +22,8 @@ function Lobby() {
 `;
 
   const onStartGame = useCallback(() => {
-    router.push(`/game/play`);
-  }, [router]);
+    router.push(`/game/play?name=${params.get("name")}}`);
+  }, [params, router]);
 
   useEffect(() => {
     socket.emit("playerJoined", params.get("name"), params.get("lobbyId"));
@@ -38,6 +38,9 @@ function Lobby() {
   // Update the players list when the "playersList" event is received from the server
   useEffect(() => {
     socket.on("playersList", ({ playersList }: { playersList: Player[] }) => {
+
+      // save the players list in local storage
+      localStorage.setItem("players", JSON.stringify(playersList));
       setPlayers(playersList);
     });
 
@@ -49,7 +52,7 @@ function Lobby() {
       socket.off("playersList");
       socket.off("roomName");
     };
-  }, []);
+  }, [params]);
 
   return (
     <>

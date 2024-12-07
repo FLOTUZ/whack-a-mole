@@ -1,15 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Container, Flex, HStack } from "@chakra-ui/react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import MoleComponent from "@/components/custom/mole.component";
 import IWasHittedComponent from "@/components/custom/i-was-hitted.component";
-import socket from "@/utils/socket";
+import { socket } from "@/utils/socket";
+import { useSearchParams } from "next/navigation";
+import { Player } from "@/interfaces";
 
 export default function Mole() {
+  const params = useSearchParams();
+  const [playerName, setPlayerName] = useState<string | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
+
   const [showBlow, setShowBlow] = useState<{
     opened: boolean;
     hittedBy: string | null;
@@ -21,53 +27,6 @@ export default function Mole() {
   }>({ position: 0, playerToHitId: "" });
 
   const handle = useFullScreenHandle();
-
-  const playerName = "Mani";
-
-  const players = useMemo(() => {
-    return [
-      {
-        id: "1",
-        name: "Kinn",
-        img_url: "",
-      },
-      {
-        id: "2",
-        name: "Leo",
-        img_url: "",
-      },
-      {
-        id: "3",
-        name: "Tere",
-        image_url: "",
-      },
-      {
-        id: "4",
-        name: "Juanca",
-        image_url: "",
-      },
-      {
-        id: "5",
-        name: "Leo",
-        image_url: "",
-      },
-      {
-        id: "6",
-        name: "Erazo",
-        image_url: "",
-      },
-      {
-        id: "7",
-        name: "Erazo",
-        image_url: "",
-      },
-      {
-        id: "8",
-        name: "Erazo",
-        image_url: "",
-      },
-    ];
-  }, []);
 
   function hit({ moleId }: { moleId: string }) {
     socket.emit("hit", playerName, moleId);
@@ -93,17 +52,31 @@ export default function Mole() {
   // each ranom seconds between 500ms and 1 put a player on a mole
   useEffect(() => {
     const interval = setInterval(() => {
+      if (players.length === 0) return;
+      // Get a random player
       const randomPlayer = players[Math.floor(Math.random() * players.length)];
 
       setMole({
         position: Math.floor(Math.random() * 30),
         playerToHitId: randomPlayer.id,
       });
+      console.log("random player", randomPlayer);
     }, Math.floor(Math.random() * 1000) + 500);
     return () => {
       clearInterval(interval);
     };
   }, [players]);
+
+  // on close the tab the player leave the game
+  useEffect(() => {
+    setPlayerName(params.get("name"));
+    let playersSaved = JSON.parse(localStorage.getItem("players") || "[]");
+
+    // remove the current player from the list
+    playersSaved = playersSaved.filter((player: Player) => player.name !== params.get("name"));
+    
+    setPlayers(playersSaved);
+  }, [params]);
 
   return (
     <>
